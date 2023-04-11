@@ -49,7 +49,14 @@ install() {
   local -r install_version="v$2"
   local -r install_path="$3"
   local -r install_path_bin="${install_path}/bin"
-  local -r platform="$(uname | tr '[:upper:]' '[:lower:]')_amd64"
+  local arch
+	case "$(uname -m)" in
+	i386 | i686 | x86) arch="386" ;;
+	x86_64) arch="amd64" ;;
+	aarch64) arch="arm64" ;;
+	*) arch="$(uname -m)" ;;
+	esac
+  local -r platform="$(uname | tr '[:upper:]' '[:lower:]')_${arch}"
 
   [ "$install_type" != "version" ] && error_exit "Error: source installs are not supported"
 
